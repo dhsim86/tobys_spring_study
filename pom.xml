@@ -12,7 +12,16 @@
         <maven.war.plugin-version>2.4</maven.war.plugin-version>
         <webAppDir>target/classes</webAppDir>
         <webXmlPath>src/main/webapp/WEB-INF/web.xml</webXmlPath>
+        <mysql.connector.version>5.1.42</mysql.connector.version>
     </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql.connector.version}</version>
+        </dependency>
+    </dependencies>
 
     <build>
         <finalName>spring</finalName>
