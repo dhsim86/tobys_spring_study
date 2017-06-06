@@ -1,5 +1,6 @@
 package ch01;
 
+import ch01.springbook.user.dao.NUserDao;
 import ch01.springbook.user.dao.UserDao;
 import ch01.springbook.user.domain.User;
 
@@ -9,7 +10,7 @@ public class ch01_main {
 
 	public static void main(String[] args) throws ClassNotFoundException, SQLException {
 
-		UserDao dao = new UserDao();
+		UserDao dao = new NUserDao();
 
 		User user = new User();
 		user.setId("whiteship");
