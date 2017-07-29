@@ -1,14 +1,25 @@
 package ch01.springbook.user.dao;
 
-import ch01.springbook.user.domain.User;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-import java.sql.*;
+import ch01.springbook.user.domain.User;
 
 public class UserDao {
 
 	private ConnectionMaker connectionMaker;
 
+	public UserDao() {
+
+	}
+
 	public UserDao(ConnectionMaker connectionMaker) {
+		this.connectionMaker = connectionMaker;
+	}
+
+	public void setConnectionMaker(ConnectionMaker connectionMaker) {
 		this.connectionMaker = connectionMaker;
 	}
 
