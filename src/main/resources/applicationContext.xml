@@ -7,9 +7,16 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
 
     <bean id="connectionMaker" class="ch01.springbook.user.dao.SimpleConnectionMaker" />
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
+        <property name="driverClass" value="com.mysql.jdbc.Driver" />
+        <property name="url" value="jdbc:mysql://localhost/tobystudy?useUnicode=true&amp;characterEncoding=UTF-8&amp;useSSL=true&amp;verifyServerCertificate=false" />
+        <property name="username" value="study" />
+        <property name="password" value="study" />
+    </bean>
 
     <bean id="userDao" class="ch01.springbook.user.dao.UserDao">
         <property name="connectionMaker" ref="connectionMaker" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
 
 </beans>
