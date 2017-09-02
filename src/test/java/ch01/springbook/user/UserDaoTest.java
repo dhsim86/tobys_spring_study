@@ -39,7 +39,7 @@ public class UserDaoTest {
 	}
 
 	@Test
-	public void addAndGet() throws SQLException, ClassNotFoundException {
+	public void addAndGet() {
 		// Delete Test
 		userDao.deleteAll();
 		assertThat(userDao.getCount(), is(0));
@@ -58,7 +58,7 @@ public class UserDaoTest {
 	}
 
 	@Test
-	public void count() throws SQLException, ClassNotFoundException {
+	public void count() {
 		userDao.deleteAll();
 		assertThat(userDao.getCount(), is(0));
 
@@ -73,7 +73,7 @@ public class UserDaoTest {
 	}
 
 	@Test(expected = EmptyResultDataAccessException.class)
-	public void getUserFailure() throws SQLException, ClassNotFoundException {
+	public void getUserFailure() {
 		userDao.deleteAll();
 		assertThat(userDao.getCount(), is(0));
 

@@ -18,7 +18,18 @@ import ch01.springbook.user.domain.User;
 public class UserDao {
 
 	private JdbcTemplate jdbcTemplate;
-	private DataSource dataSource;
+	private RowMapper<User> userMapper = new RowMapper<User>() {
+		@Override
+		public User mapRow(ResultSet resultSet, int i) throws SQLException {
+
+			User user = new User();
+			user.setId(resultSet.getString("id"));
+			user.setName(resultSet.getString("name"));
+			user.setPassword(resultSet.getString("password"));
+
+			return user;
+		}
+	};
 
 	public UserDao() {
 
@@ -26,39 +37,25 @@ public class UserDao {
 
 	public void setDataSource(DataSource dataSource) {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
-		this.dataSource = dataSource;
 	}
 
-	public void add(User user) throws ClassNotFoundException, SQLException {
+	public void add(User user) {
 		this.jdbcTemplate.update("INSERT INTO users(id, name, password) VALUES(?, ?, ?)",
 			user.getId(), user.getName(), user.getPassword());
 	}
 
-	public User get(String id) throws ClassNotFoundException, SQLException {
+	public User get(String id) {
 
 		return this.jdbcTemplate.queryForObject(
-			"SELECT * FROM users WHERE id = ?",
-			new Object[] {id},
-			new RowMapper<User>() {
-				@Override
-				public User mapRow(ResultSet resultSet, int i) throws SQLException {
-
-					User user = new User();
-					user.setId(resultSet.getString("id"));
-					user.setName(resultSet.getString("name"));
-					user.setPassword(resultSet.getString("password"));
-
-					return user;
-				}
-			}
+			"SELECT * FROM users WHERE id = ?", new Object[] {id}, this.userMapper
 		);
 	}
 
-	public void deleteAll() throws SQLException {
+	public void deleteAll() {
 		this.jdbcTemplate.update("delete from users");
 	}
 
-	public int getCount() throws SQLException {
+	public int getCount() {
 
 		return this.jdbcTemplate.query(
 			new PreparedStatementCreator() {
