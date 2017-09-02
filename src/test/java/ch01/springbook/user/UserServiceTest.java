@@ -1,5 +1,7 @@
 package ch01.springbook.user;
 
+import static ch01.springbook.user.UserService.MIN_LOGCOUNT_FOR_SILVER;
+import static ch01.springbook.user.UserService.MIN_RECOMMEND_FOR_GOLD;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -34,11 +36,11 @@ public class UserServiceTest {
 	public void setUp() {
 
 		userList = Arrays.asList(
-			new User("test01", "test", "no1", Level.BASIC, 49, 0),
-			new User("test02", "test", "no2", Level.BASIC, 50, 0),
-			new User("test03", "test", "no3", Level.SILVER, 60, 29),
-			new User("test04", "test", "no3", Level.SILVER, 60, 30),
-			new User("test05", "test", "no3", Level.GOLD, 100, 100)
+			new User("test01", "test", "no1", Level.BASIC, MIN_LOGCOUNT_FOR_SILVER - 1, 0),
+			new User("test02", "test", "no2", Level.BASIC, MIN_LOGCOUNT_FOR_SILVER, 0),
+			new User("test03", "test", "no3", Level.SILVER, 60, MIN_RECOMMEND_FOR_GOLD - 1),
+			new User("test04", "test", "no3", Level.SILVER, 60, MIN_RECOMMEND_FOR_GOLD),
+			new User("test05", "test", "no3", Level.GOLD, 100, Integer.MAX_VALUE)
 		);
 	}
 
@@ -58,11 +60,11 @@ public class UserServiceTest {
 
 		userService.upgradeLevels();
 
-		checkLevel(userList.get(0), Level.BASIC);
-		checkLevel(userList.get(1), Level.SILVER);
-		checkLevel(userList.get(2), Level.SILVER);
-		checkLevel(userList.get(3), Level.GOLD);
-		checkLevel(userList.get(4), Level.GOLD);
+		checkLevelUpgraded(userList.get(0), false);
+		checkLevelUpgraded(userList.get(1), true);
+		checkLevelUpgraded(userList.get(2), false);
+		checkLevelUpgraded(userList.get(3), true);
+		checkLevelUpgraded(userList.get(4), false);
 	}
 
 	@Test
@@ -84,8 +86,14 @@ public class UserServiceTest {
 		assertThat(userWithoutLevelRead.getLevel(), is(Level.BASIC));
 	}
 
-	private void checkLevel(User user, Level expectedLevel) {
+	private void checkLevelUpgraded(User user, boolean upgraded) {
+
 		User userUpdate = userDao.get(user.getId());
-		assertThat(userUpdate.getLevel(), is(expectedLevel));
+
+		if (upgraded) {
+			assertThat(userUpdate.getLevel(), is(user.getLevel().nextLevel()));
+		} else {
+			assertThat(userUpdate.getLevel(), is(user.getLevel()));
+		}
 	}
 }
