@@ -1,9 +1,10 @@
 package ch03.springbook.user.dao;
 
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+
+import javax.sql.DataSource;
 
 public class JdbcContext {
 
@@ -11,6 +12,18 @@ public class JdbcContext {
 
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
+	}
+
+	public void executeSql(final String query) throws SQLException {
+
+		workWithStatementStrategy(
+			new StatementStrategy() {
+				@Override
+				public PreparedStatement makePreparedStatement(Connection c) throws SQLException {
+					return c.prepareStatement(query);
+				}
+			}
+		);
 	}
 
 	public void workWithStatementStrategy(StatementStrategy stmt) throws SQLException {
