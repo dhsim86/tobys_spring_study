@@ -3,6 +3,8 @@ package ch01.springbook.user;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import java.util.List;
+
 import javax.sql.DataSource;
 
 import org.junit.Before;
@@ -16,6 +18,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import ch01.springbook.user.dao.UserDao;
+import ch01.springbook.user.domain.Level;
 import ch01.springbook.user.domain.User;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -37,9 +40,17 @@ public class UserDaoTest {
 
 	@Before
 	public void setUp() {
-		user1 = new User("test01", "test", "no1");
-		user2 = new User("test02", "test", "no2");
-		user3 = new User("test03", "test", "no3");
+		user1 = new User("test01", "test", "no1", Level.BASIC, 1, 0);
+		user2 = new User("test02", "test", "no2", Level.SILVER, 55, 10);
+		user3 = new User("test03", "test", "no3", Level.GOLD, 100, 40);
+	}
+
+	private void checkSameUser(User user1, User user2) {
+		assertThat(user2.getName(), is(user1.getName()));
+		assertThat(user2.getPassword(), is(user1.getPassword()));
+		assertThat(user2.getLevel(), is(user1.getLevel()));
+		assertThat(user2.getLogin(), is(user1.getLogin()));
+		assertThat(user2.getRecommend(), is(user1.getRecommend()));
 	}
 
 	@Test
@@ -53,12 +64,23 @@ public class UserDaoTest {
 		assertThat(userDao.getCount(), is(2));
 
 		User userget1 = userDao.get(user1.getId());
-		assertThat(userget1.getName(), is(user1.getName()));
-		assertThat(userget1.getPassword(), is(user1.getPassword()));
+		checkSameUser(userget1, user1);
 
 		User userget2 = userDao.get(user2.getId());
-		assertThat(userget2.getName(), is(user2.getName()));
-		assertThat(userget2.getPassword(), is(user2.getPassword()));
+		checkSameUser(userget2, user2);
+	}
+
+	@Test
+	public void getAll() {
+
+		userDao.deleteAll();
+
+		userDao.add(user1);
+		userDao.add(user2);
+		userDao.add(user3);
+
+		List<User> userList = userDao.getAll();
+		assertThat(userList.size(), is(3));
 	}
 
 	@Test
@@ -90,5 +112,27 @@ public class UserDaoTest {
 
 		userDao.add(user1);
 		userDao.add(user1);
+	}
+
+	@Test
+	public void update() {
+		userDao.deleteAll();
+
+		userDao.add(user1);
+		userDao.add(user2);
+
+		user1.setName("test011");
+		user1.setPassword("testmod");
+		user1.setLevel(Level.GOLD);
+		user1.setLogin(1000);
+		user1.setRecommend(999);
+
+		userDao.update(user1);
+
+		User userget1 = userDao.get(user1.getId());
+		checkSameUser(user1, userget1);
+
+		User userget2 = userDao.get(user2.getId());
+		checkSameUser(user2, userget2);
 	}
 }

@@ -1,7 +1,6 @@
 package ch03.springbook.calculator;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertThat;
 
 import java.io.IOException;

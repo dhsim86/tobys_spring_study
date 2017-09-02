@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.sql.DataSource;
 
@@ -13,6 +14,7 @@ import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 
+import ch01.springbook.user.domain.Level;
 import ch01.springbook.user.domain.User;
 
 public class UserDaoJdbc implements UserDao {
@@ -26,6 +28,9 @@ public class UserDaoJdbc implements UserDao {
 			user.setId(resultSet.getString("id"));
 			user.setName(resultSet.getString("name"));
 			user.setPassword(resultSet.getString("password"));
+			user.setLevel(Level.valueOf(resultSet.getInt("level")));
+			user.setLogin(resultSet.getInt("login"));
+			user.setRecommend(resultSet.getInt("recommend"));
 
 			return user;
 		}
@@ -40,8 +45,9 @@ public class UserDaoJdbc implements UserDao {
 	}
 
 	public void add(User user) {
-		this.jdbcTemplate.update("INSERT INTO users(id, name, password) VALUES(?, ?, ?)",
-								 user.getId(), user.getName(), user.getPassword());
+		this.jdbcTemplate.update("INSERT INTO users(id, name, password, level, login, recommend) VALUES(?, ?, ?, ?, ?, ?)",
+								 user.getId(), user.getName(), user.getPassword(),
+								 user.getLevel().intValue(), user.getLogin(), user.getRecommend());
 	}
 
 	public User get(String id) {
@@ -49,6 +55,10 @@ public class UserDaoJdbc implements UserDao {
 		return this.jdbcTemplate.queryForObject(
 			"SELECT * FROM users WHERE id = ?", new Object[] {id}, this.userMapper
 											   );
+	}
+
+	public List<User> getAll() {
+		return this.jdbcTemplate.query("SELECT * FROM users", this.userMapper);
 	}
 
 	public void deleteAll() {
@@ -74,5 +84,13 @@ public class UserDaoJdbc implements UserDao {
 									  );
 
 		// this.jdbcTemplate.queryForInt("select count(*) from users");
+	}
+
+	public void update(User user) {
+		this.jdbcTemplate.update(
+			"update users set name = ?, password = ?, level = ?, login = ?, " +
+			"recommend = ? where id = ? ",
+			user.getName(), user.getPassword(), user.getLevel().intValue(), user.getLogin(),
+			user.getRecommend(), user.getId());
 	}
 }
