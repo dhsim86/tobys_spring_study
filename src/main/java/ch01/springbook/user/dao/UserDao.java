@@ -7,6 +7,7 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
+import ch03.springbook.user.dao.AddStatement;
 import org.springframework.dao.EmptyResultDataAccessException;
 
 import ch01.springbook.user.domain.User;
@@ -35,18 +36,9 @@ public class UserDao {
 	}
 
 	public void add(User user) throws ClassNotFoundException, SQLException {
-		Connection c = dataSource.getConnection();
 
-		PreparedStatement ps = c.prepareStatement(
-			"INSERT INTO users(id, name, password) VALUES(?, ?, ?)");
-		ps.setString(1, user.getId());
-		ps.setString(2, user.getName());
-		ps.setString(3, user.getPassword());
-
-		ps.executeUpdate();
-
-		ps.close();
-		c.close();
+		StatementStrategy st = new AddStatement(user);
+		jdbcContextWithStatementStrategy(st);
 	}
 
 	public User get(String id) throws ClassNotFoundException, SQLException {
