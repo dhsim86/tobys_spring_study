@@ -3,13 +3,14 @@ package ch01.springbook.user;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-import java.sql.SQLException;
+import javax.sql.DataSource;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -26,6 +27,9 @@ public class UserDaoTest {
 
 	@Autowired
 	private UserDao userDao;
+
+	@Autowired
+	private DataSource dataSource;
 
 	private User user1;
 	private User user2;
@@ -78,5 +82,13 @@ public class UserDaoTest {
 		assertThat(userDao.getCount(), is(0));
 
 		userDao.get("unknown");
+	}
+
+	@Test(expected = DuplicateKeyException.class)
+	public void duplicateKey() {
+		userDao.deleteAll();
+
+		userDao.add(user1);
+		userDao.add(user1);
 	}
 }
