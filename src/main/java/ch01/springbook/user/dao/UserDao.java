@@ -10,6 +10,8 @@ import javax.sql.DataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
 
 import ch01.springbook.user.domain.User;
+import ch03.springbook.user.dao.DeleteAllStatement;
+import ch03.springbook.user.dao.StatementStrategy;
 
 public class UserDao {
 
@@ -78,22 +80,8 @@ public class UserDao {
 
 	public void deleteAll() throws SQLException {
 
-		Connection c = null;
-		PreparedStatement ps = null;
-
-		try {
-
-			c = dataSource.getConnection();
-			ps = makeStatement(c);
-
-			ps.executeUpdate();
-
-		} catch (SQLException e) {
-			throw e;
-		} finally {
-			if (ps != null) { try { ps.close(); } catch (SQLException e) {} }
-			if (c != null) { try { c.close(); } catch (SQLException e) {} }
-		}
+		StatementStrategy st = new DeleteAllStatement();
+		jdbcContextWithStatementStrategy(st);
 	}
 
 	public int getCount() throws SQLException {
@@ -117,5 +105,25 @@ public class UserDao {
 		PreparedStatement ps;
 		ps = c.prepareStatement("delete from users");
 		return ps;
+	}
+
+	public void jdbcContextWithStatementStrategy(StatementStrategy stmt) throws SQLException {
+
+		Connection c = null;
+		PreparedStatement ps = null;
+
+		try {
+
+			c = dataSource.getConnection();
+			ps = stmt.makePreparedStatement(c);
+			ps.executeUpdate();
+
+		} catch (SQLException e) {
+			throw e;
+
+		} finally {
+			if (ps != null) { try { ps.close(); } catch (SQLException e) {} }
+			if (c != null) { try { c.close(); } catch (SQLException e) {} }
+		}
 	}
 }
