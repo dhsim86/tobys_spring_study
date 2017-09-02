@@ -14,8 +14,12 @@
         <property name="password" value="study" />
     </bean>
 
+    <bean id="jdbcContext" class="ch03.springbook.user.dao.JdbcContext">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
     <bean id="userDao" class="ch01.springbook.user.dao.UserDao">
-        <property name="connectionMaker" ref="connectionMaker" />
+        <property name="jdbcContext" ref="jdbcContext" />
         <property name="dataSource" ref="dataSource" />
     </bean>
 

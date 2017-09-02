@@ -10,32 +10,29 @@ import javax.sql.DataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
 
 import ch01.springbook.user.domain.User;
+import ch03.springbook.user.dao.JdbcContext;
 import ch03.springbook.user.dao.StatementStrategy;
 
 public class UserDao {
 
-	private ConnectionMaker connectionMaker;
+	private JdbcContext jdbcContext;
 	private DataSource dataSource;
 
 	public UserDao() {
 
 	}
 
-	public UserDao(ConnectionMaker connectionMaker) {
-		this.connectionMaker = connectionMaker;
+	public void setJdbcContext(JdbcContext jdbcContext) {
+		this.jdbcContext = jdbcContext;
 	}
 
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
 	}
 
-	public void setConnectionMaker(ConnectionMaker connectionMaker) {
-		this.connectionMaker = connectionMaker;
-	}
-
 	public void add(User user) throws ClassNotFoundException, SQLException {
 
-		jdbcContextWithStatementStrategy(new StatementStrategy() {
+		this.jdbcContext.workWithStatementStrategy(new StatementStrategy() {
 			@Override
 			public PreparedStatement makePreparedStatement(Connection c) throws SQLException {
 				PreparedStatement ps = c.prepareStatement(
@@ -80,7 +77,7 @@ public class UserDao {
 
 	public void deleteAll() throws SQLException {
 
-		jdbcContextWithStatementStrategy(new StatementStrategy() {
+		this.jdbcContext.workWithStatementStrategy(new StatementStrategy() {
 			@Override
 			public PreparedStatement makePreparedStatement(Connection c) throws SQLException {
 				PreparedStatement ps = c.prepareStatement("delete from users");
@@ -104,31 +101,5 @@ public class UserDao {
 		c.close();
 
 		return count;
-	}
-
-	private PreparedStatement makeStatement(Connection c) throws SQLException {
-		PreparedStatement ps;
-		ps = c.prepareStatement("delete from users");
-		return ps;
-	}
-
-	public void jdbcContextWithStatementStrategy(StatementStrategy stmt) throws SQLException {
-
-		Connection c = null;
-		PreparedStatement ps = null;
-
-		try {
-
-			c = dataSource.getConnection();
-			ps = stmt.makePreparedStatement(c);
-			ps.executeUpdate();
-
-		} catch (SQLException e) {
-			throw e;
-
-		} finally {
-			if (ps != null) { try { ps.close(); } catch (SQLException e) {} }
-			if (c != null) { try { c.close(); } catch (SQLException e) {} }
-		}
 	}
 }
