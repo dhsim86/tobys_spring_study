@@ -40,9 +40,9 @@ public class UserDaoTest {
 
 	@Before
 	public void setUp() {
-		user1 = new User("test01", "test", "no1", Level.BASIC, 1, 0);
-		user2 = new User("test02", "test", "no2", Level.SILVER, 55, 10);
-		user3 = new User("test03", "test", "no3", Level.GOLD, 100, 40);
+		user1 = new User("test01", "test", "no1", Level.BASIC, 1, 0, "test@mail.com");
+		user2 = new User("test02", "test", "no2", Level.SILVER, 55, 10, "test2@mail.com");
+		user3 = new User("test03", "test", "no3", Level.GOLD, 100, 40, "test3@mail.com");
 	}
 
 	private void checkSameUser(User user1, User user2) {
@@ -51,6 +51,7 @@ public class UserDaoTest {
 		assertThat(user2.getLevel(), is(user1.getLevel()));
 		assertThat(user2.getLogin(), is(user1.getLogin()));
 		assertThat(user2.getRecommend(), is(user1.getRecommend()));
+		assertThat(user2.getEmail(), is(user1.getEmail()));
 	}
 
 	@Test
@@ -126,6 +127,7 @@ public class UserDaoTest {
 		user1.setLevel(Level.GOLD);
 		user1.setLogin(1000);
 		user1.setRecommend(999);
+		user1.setEmail("test011@mail.com");
 
 		userDao.update(user1);
 

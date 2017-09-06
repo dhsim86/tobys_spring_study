@@ -61,11 +61,11 @@ public class UserServiceTest {
 	public void setUp() {
 
 		userList = Arrays.asList(
-			new User("test01", "test", "no1", Level.BASIC, MIN_LOGCOUNT_FOR_SILVER - 1, 0),
-			new User("test02", "test", "no2", Level.BASIC, MIN_LOGCOUNT_FOR_SILVER, 0),
-			new User("test03", "test", "no3", Level.SILVER, 60, MIN_RECOMMEND_FOR_GOLD - 1),
-			new User("test04", "test", "no3", Level.SILVER, 60, MIN_RECOMMEND_FOR_GOLD),
-			new User("test05", "test", "no3", Level.GOLD, 100, Integer.MAX_VALUE)
+			new User("test01", "test", "no1", Level.BASIC, MIN_LOGCOUNT_FOR_SILVER - 1, 0, "no1@mail.com"),
+			new User("test02", "test", "no2", Level.BASIC, MIN_LOGCOUNT_FOR_SILVER, 0, "no2@mail.com"),
+			new User("test03", "test", "no3", Level.SILVER, 60, MIN_RECOMMEND_FOR_GOLD - 1, "no3@mail.com"),
+			new User("test04", "test", "no3", Level.SILVER, 60, MIN_RECOMMEND_FOR_GOLD, "no4@mail.com"),
+			new User("test05", "test", "no3", Level.GOLD, 100, Integer.MAX_VALUE, "no5@mail.com")
 		);
 	}
 
