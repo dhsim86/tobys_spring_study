@@ -11,6 +11,10 @@
         <property name="password" value="study" />
     </bean>
 
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager" >
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
     <bean id="jdbcContext" class="ch03.springbook.user.dao.JdbcContext">
         <property name="dataSource" ref="dataSource" />
     </bean>
@@ -21,7 +25,7 @@
 
     <bean id="userService" class="ch01.springbook.user.UserService">
         <property name="userDao" ref="userDao" />
-        <property name="dataSource" ref="dataSource" />
+        <property name="transactionManager" ref="transactionManager" />
     </bean>
 
 </beans>

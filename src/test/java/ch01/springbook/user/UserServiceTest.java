@@ -10,14 +10,13 @@ import static org.junit.Assert.fail;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.sql.DataSource;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.PlatformTransactionManager;
 
 import ch01.springbook.user.dao.UserDao;
 import ch01.springbook.user.domain.Level;
@@ -48,15 +47,15 @@ public class UserServiceTest {
 	}
 
 	@Autowired
-	UserService userService;
+	private PlatformTransactionManager transactionManager;
 
 	@Autowired
-	UserDao userDao;
+	private UserService userService;
 
 	@Autowired
-	DataSource dataSource;
+	private UserDao userDao;
 
-	List<User> userList;
+	private List<User> userList;
 
 	@Before
 	public void setUp() {
@@ -116,7 +115,7 @@ public class UserServiceTest {
 	public void upgradeAllOrNothing() throws Exception {
 		UserService testUserService = new TestUserService(userList.get(3).getId());
 		testUserService.setUserDao(userDao);
-		testUserService.setDataSource(dataSource);
+		testUserService.setTransactionManager(transactionManager);
 
 		userDao.deleteAll();
 		for (User user : userList) {

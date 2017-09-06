@@ -2,9 +2,6 @@ package ch01.springbook.user;
 
 import java.util.List;
 
-import javax.sql.DataSource;
-
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
@@ -18,20 +15,19 @@ public class UserService {
 	public static final int MIN_LOGCOUNT_FOR_SILVER = 50;
 	public static final int MIN_RECOMMEND_FOR_GOLD = 30;
 
-	UserDao userDao;
-	private DataSource dataSource;
+	private PlatformTransactionManager transactionManager;
+	private UserDao userDao;
+
+	public void setTransactionManager(PlatformTransactionManager transactionManager) {
+		this.transactionManager = transactionManager;
+	}
 
 	public void setUserDao(UserDao userDao) {
 		this.userDao = userDao;
 	}
 
-	public void setDataSource(DataSource dataSource) {
-		this.dataSource = dataSource;
-	}
-
 	public void upgradeLevels() throws Exception {
 
-		PlatformTransactionManager transactionManager = new DataSourceTransactionManager(dataSource);
 		TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
 		try {
