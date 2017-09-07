@@ -1,7 +1,7 @@
 package ch01.springbook.user;
 
-import static ch01.springbook.user.UserService.MIN_LOGCOUNT_FOR_SILVER;
-import static ch01.springbook.user.UserService.MIN_RECOMMEND_FOR_GOLD;
+import static ch01.springbook.user.UserServiceImpl.MIN_LOGCOUNT_FOR_SILVER;
+import static ch01.springbook.user.UserServiceImpl.MIN_RECOMMEND_FOR_GOLD;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -30,7 +30,7 @@ public class UserServiceTest {
 
 	}
 
-	static class TestUserService extends UserService {
+	static class TestUserService extends UserServiceImpl {
 		private String id;
 
 		private TestUserService(String id) {
@@ -113,9 +113,12 @@ public class UserServiceTest {
 
 	@Test
 	public void upgradeAllOrNothing() throws Exception {
-		UserService testUserService = new TestUserService(userList.get(3).getId());
+		TestUserService testUserService = new TestUserService(userList.get(3).getId());
 		testUserService.setUserDao(userDao);
-		testUserService.setTransactionManager(transactionManager);
+
+		UserServiceTx txUserService = new UserServiceTx();
+		txUserService.setTransactionManager(transactionManager);
+		txUserService.setUserService(testUserService);
 
 		userDao.deleteAll();
 		for (User user : userList) {
@@ -123,7 +126,7 @@ public class UserServiceTest {
 		}
 
 		try {
-			testUserService.upgradeLevels();
+			txUserService.upgradeLevels();
 			fail("TestUserServiceException expected.");
 		} catch (TestUserServiceException e) {
 
