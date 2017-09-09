@@ -7,6 +7,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
+import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.List;
 
@@ -119,6 +120,35 @@ public class UserServiceTest {
 		UserServiceTx txUserService = new UserServiceTx();
 		txUserService.setTransactionManager(transactionManager);
 		txUserService.setUserService(testUserService);
+
+		userDao.deleteAll();
+		for (User user : userList) {
+			userDao.add(user);
+		}
+
+		try {
+			txUserService.upgradeLevels();
+			fail("TestUserServiceException expected.");
+		} catch (TestUserServiceException e) {
+
+		}
+
+		checkLevelUpgraded(userList.get(1), false);
+	}
+
+	@Test
+	public void upgradeAllOrNothingUsingDynamicProxy() throws Exception {
+
+		TestUserService testUserService = new TestUserService(userList.get(3).getId());
+		testUserService.setUserDao(userDao);
+
+		TransactionHandler txHandler = new TransactionHandler();
+		txHandler.setTarget(testUserService);
+		txHandler.setTransactionManager(transactionManager);
+		txHandler.setPattern("upgradeLevels");
+
+		UserService txUserService = (UserService)Proxy.newProxyInstance(
+			getClass().getClassLoader(), new Class[] { UserService.class }, txHandler);
 
 		userDao.deleteAll();
 		for (User user : userList) {
