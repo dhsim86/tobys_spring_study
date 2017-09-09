@@ -32,4 +32,8 @@
         <property name="userService" ref="userServiceImpl" />
     </bean>
 
+    <bean id="message" class="ch06.springbook.factorybean.MessageFactoryBean">
+        <property name="text" value="Factory Bean" />
+    </bean>
+
 </beans>
