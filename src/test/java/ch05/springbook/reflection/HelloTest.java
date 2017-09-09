@@ -3,12 +3,14 @@ package ch05.springbook.reflection;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
+import java.lang.reflect.Proxy;
+
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.junit.Test;
 import org.springframework.aop.framework.ProxyFactoryBean;
-
-import java.lang.reflect.Proxy;
+import org.springframework.aop.support.DefaultPointcutAdvisor;
+import org.springframework.aop.support.NameMatchMethodPointcut;
 
 public class HelloTest {
 
@@ -17,6 +19,22 @@ public class HelloTest {
 			String ret = (String)invocation.proceed();
 			return ret.toUpperCase();
 		}
+	}
+
+	@Test
+	public void pointcutAdvisorTest() {
+		ProxyFactoryBean proxyFactoryBean = new ProxyFactoryBean();
+		proxyFactoryBean.setTarget(new HelloTarget());
+
+		NameMatchMethodPointcut pointcut = new NameMatchMethodPointcut();
+		pointcut.setMappedName("sayH*");
+
+		proxyFactoryBean.addAdvisor(new DefaultPointcutAdvisor(pointcut, new UppercaseAdvice()));
+
+		Hello proxyHello = (Hello)proxyFactoryBean.getObject();
+		assertThat(proxyHello.sayHello("Toby"), is("HELLO TOBY"));
+		assertThat(proxyHello.sayHi("Toby"), is("HI TOBY"));
+		assertThat(proxyHello.sayThankYou("Toby"), is("Thank You Toby"));
 	}
 
 	@Test
