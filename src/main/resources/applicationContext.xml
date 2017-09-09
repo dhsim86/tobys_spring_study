@@ -27,9 +27,16 @@
         <property name="userDao" ref="userDao" />
     </bean>
 
-    <bean id="userService" class="ch01.springbook.user.UserServiceTx">
+    <!-- <bean id="userService" class="ch01.springbook.user.UserServiceTx">
         <property name="transactionManager" ref="transactionManager" />
         <property name="userService" ref="userServiceImpl" />
+    </bean> -->
+
+    <bean id="userService" class="ch01.springbook.user.TxProxyFactoryBean">
+        <property name="target" ref="userServiceImpl" />
+        <property name="transactionManager" ref="transactionManager" />
+        <property name="pattern" value="upgradeLevels" />
+        <property name="serviceInterface" value="ch01.springbook.user.UserService" />
     </bean>
 
     <bean id="message" class="ch06.springbook.factorybean.MessageFactoryBean">
