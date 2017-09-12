@@ -8,6 +8,8 @@ import java.lang.reflect.Proxy;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.junit.Test;
+import org.springframework.aop.ClassFilter;
+import org.springframework.aop.Pointcut;
 import org.springframework.aop.framework.ProxyFactoryBean;
 import org.springframework.aop.support.DefaultPointcutAdvisor;
 import org.springframework.aop.support.NameMatchMethodPointcut;
@@ -18,6 +20,49 @@ public class HelloTest {
 		public Object invoke(MethodInvocation invocation) throws Throwable {
 			String ret = (String)invocation.proceed();
 			return ret.toUpperCase();
+		}
+	}
+
+	@Test
+	public void classNamePointcutAdvisorTest() {
+
+		NameMatchMethodPointcut classMethodPointcut = new NameMatchMethodPointcut() {
+			public ClassFilter getClassFilter() {
+				return new ClassFilter() {
+					@Override
+					public boolean matches(Class<?> clazz) {
+						return clazz.getSimpleName().startsWith("HelloT");
+					}
+				};
+			}
+		};
+
+		classMethodPointcut.setMappedName("sayH*");
+
+		checkAdviced(new HelloTarget(), classMethodPointcut, true);
+
+		class HelloWorld extends HelloTarget {};
+		checkAdviced(new HelloWorld(), classMethodPointcut, false);
+
+		class HelloToby extends HelloTarget {};
+		checkAdviced(new HelloToby(), classMethodPointcut, true);
+	}
+
+	private void checkAdviced(Object target, Pointcut pointcut, boolean adviced) {
+		ProxyFactoryBean proxyFactoryBean = new ProxyFactoryBean();
+		proxyFactoryBean.setTarget(target);
+		proxyFactoryBean.addAdvisor(new DefaultPointcutAdvisor(pointcut, new UppercaseAdvice()));
+
+		Hello proxyHello = (Hello)proxyFactoryBean.getObject();
+
+		if (adviced) {
+			assertThat(proxyHello.sayHello("Toby"), is("HELLO TOBY"));
+			assertThat(proxyHello.sayHi("Toby"), is("HI TOBY"));
+			assertThat(proxyHello.sayThankYou("Toby"), is("Thank You Toby"));
+		} else {
+			assertThat(proxyHello.sayHello("Toby"), is("Hello Toby"));
+			assertThat(proxyHello.sayHi("Toby"), is("Hi Toby"));
+			assertThat(proxyHello.sayThankYou("Toby"), is("Thank You Toby"));
 		}
 	}
 
