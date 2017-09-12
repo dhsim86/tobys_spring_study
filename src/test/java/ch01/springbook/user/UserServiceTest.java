@@ -14,7 +14,6 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.aop.framework.ProxyFactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.annotation.DirtiesContext;
@@ -34,11 +33,15 @@ public class UserServiceTest {
 
 	}
 
-	static class TestUserService extends UserServiceImpl {
-		private String id;
+	static class TestUserServiceImpl extends UserServiceImpl {
+		private String id = "test04";
 
-		private TestUserService(String id) {
+		private TestUserServiceImpl(String id) {
 			this.id = id;
+		}
+
+		public TestUserServiceImpl() {
+
 		}
 
 		protected void upgradeLevel(User user) {
@@ -55,6 +58,9 @@ public class UserServiceTest {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private UserService testUserService;
 
 	@Autowired
 	private UserDao userDao;
@@ -120,12 +126,12 @@ public class UserServiceTest {
 
 	@Test
 	public void upgradeAllOrNothing() throws Exception {
-		TestUserService testUserService = new TestUserService(userList.get(3).getId());
-		testUserService.setUserDao(userDao);
+		TestUserServiceImpl testUserServiceImpl = new TestUserServiceImpl(userList.get(3).getId());
+		testUserServiceImpl.setUserDao(userDao);
 
 		UserServiceTx txUserService = new UserServiceTx();
 		txUserService.setTransactionManager(transactionManager);
-		txUserService.setUserService(testUserService);
+		txUserService.setUserService(testUserServiceImpl);
 
 		userDao.deleteAll();
 		for (User user : userList) {
@@ -145,11 +151,11 @@ public class UserServiceTest {
 	@Test
 	public void upgradeAllOrNothingUsingDynamicProxy() throws Exception {
 
-		TestUserService testUserService = new TestUserService(userList.get(3).getId());
-		testUserService.setUserDao(userDao);
+		TestUserServiceImpl testUserServiceImpl = new TestUserServiceImpl(userList.get(3).getId());
+		testUserServiceImpl.setUserDao(userDao);
 
 		TransactionHandler txHandler = new TransactionHandler();
-		txHandler.setTarget(testUserService);
+		txHandler.setTarget(testUserServiceImpl);
 		txHandler.setTransactionManager(transactionManager);
 		txHandler.setPattern("upgradeLevels");
 
@@ -175,21 +181,13 @@ public class UserServiceTest {
 	@DirtiesContext
 	public void upgradeAllOrNothingUsingDynamicProxyBean() throws Exception {
 
-		TestUserService testUserService = new TestUserService(userList.get(3).getId());
-		testUserService.setUserDao(userDao);
-
-		ProxyFactoryBean txProxyFactoryBean = applicationContext.getBean("&userService", ProxyFactoryBean.class);
-		txProxyFactoryBean.setTarget(testUserService);
-
-		UserService txUserService = (UserService)txProxyFactoryBean.getObject();
-
 		userDao.deleteAll();
 		for (User user : userList) {
 			userDao.add(user);
 		}
 
 		try {
-			txUserService.upgradeLevels();
+			testUserService.upgradeLevels();
 			fail("TestUserServiceException expected.");
 		} catch (TestUserServiceException e) {
 

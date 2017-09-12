@@ -23,28 +23,19 @@
         <property name="dataSource" ref="dataSource" />
     </bean>
 
-    <bean id="userServiceImpl" class="ch01.springbook.user.UserServiceImpl" >
+    <bean id="userService" class="ch01.springbook.user.UserServiceImpl" >
         <property name="userDao" ref="userDao" />
     </bean>
 
-    <!-- <bean id="userService" class="ch01.springbook.user.UserServiceTx">
-        <property name="transactionManager" ref="transactionManager" />
-        <property name="userService" ref="userServiceImpl" />
-    </bean>
-
-    <bean id="userService" class="ch01.springbook.user.TxProxyFactoryBean">
-        <property name="target" ref="userServiceImpl" />
-        <property name="transactionManager" ref="transactionManager" />
-        <property name="pattern" value="upgradeLevels" />
-        <property name="serviceInterface" value="ch01.springbook.user.UserService" />
-    </bean> -->
+    <bean id="testUserService" class="ch01.springbook.user.UserServiceTest$TestUserServiceImpl" parent="userService" />
 
     <bean id="transactionAdvice" class="ch01.springbook.user.TransactionAdvice">
         <property name="transactionManager" ref="transactionManager"/>
     </bean>
 
-    <bean id="transactionPointcut" class="org.springframework.aop.support.NameMatchMethodPointcut">
-        <property name="mappedName" value="upgrade*"/>
+    <bean id="transactionPointcut" class="ch06.springbook.aop.NameMatchClassMethodPointcut">
+        <property name="mappedClassName" value="*ServiceImpl" />
+        <property name="mappedName" value="upgrade*" />
     </bean>
 
     <bean id="transactionAdvisor" class="org.springframework.aop.support.DefaultPointcutAdvisor">
@@ -52,17 +43,10 @@
         <property name="pointcut" ref="transactionPointcut"/>
     </bean>
 
-    <bean id="userService" class="org.springframework.aop.framework.ProxyFactoryBean">
-        <property name="target" ref="userServiceImpl"/>
-        <property name="interceptorNames">
-            <list>
-                <value>transactionAdvisor</value>
-            </list>
-        </property>
-    </bean>
-
     <bean id="message" class="ch06.springbook.factorybean.MessageFactoryBean">
         <property name="text" value="Factory Bean" />
     </bean>
+
+    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" />
 
 </beans>
