@@ -22,6 +22,6 @@ public class AopTest {
 				   pointcut.getMethodMatcher().matches(Target.class.getMethod("plus", int.class, int.class), null), is(false));
 
 		assertThat(pointcut.getClassFilter().matches(Bean.class) &&
-				   pointcut.getMethodMatcher().matches(Target.class.getMethod("method"), null), is(false));
+				   pointcut.getMethodMatcher().matches(Target.class.getMethod("minus", int.class, int.class), null), is(false));
 	}
 }
