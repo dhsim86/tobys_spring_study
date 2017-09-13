@@ -27,7 +27,7 @@
         <property name="userDao" ref="userDao" />
     </bean>
 
-    <bean id="testUserService" class="ch01.springbook.user.UserServiceTest$TestUserServiceImpl" parent="userService" />
+    <bean id="testUserService" class="ch01.springbook.user.UserServiceTest$TestUserService" parent="userService" />
 
     <bean id="transactionAdvice" class="ch01.springbook.user.TransactionAdvice">
         <property name="transactionManager" ref="transactionManager"/>

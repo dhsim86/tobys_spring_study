@@ -33,14 +33,14 @@ public class UserServiceTest {
 
 	}
 
-	static class TestUserServiceImpl extends UserServiceImpl {
+	static class TestUserService extends UserServiceImpl {
 		private String id = "test04";
 
-		private TestUserServiceImpl(String id) {
+		private TestUserService(String id) {
 			this.id = id;
 		}
 
-		public TestUserServiceImpl() {
+		public TestUserService() {
 
 		}
 
@@ -126,12 +126,12 @@ public class UserServiceTest {
 
 	@Test
 	public void upgradeAllOrNothing() throws Exception {
-		TestUserServiceImpl testUserServiceImpl = new TestUserServiceImpl(userList.get(3).getId());
-		testUserServiceImpl.setUserDao(userDao);
+		TestUserService testUserService = new TestUserService(userList.get(3).getId());
+		testUserService.setUserDao(userDao);
 
 		UserServiceTx txUserService = new UserServiceTx();
 		txUserService.setTransactionManager(transactionManager);
-		txUserService.setUserService(testUserServiceImpl);
+		txUserService.setUserService(testUserService);
 
 		userDao.deleteAll();
 		for (User user : userList) {
@@ -151,11 +151,11 @@ public class UserServiceTest {
 	@Test
 	public void upgradeAllOrNothingUsingDynamicProxy() throws Exception {
 
-		TestUserServiceImpl testUserServiceImpl = new TestUserServiceImpl(userList.get(3).getId());
-		testUserServiceImpl.setUserDao(userDao);
+		TestUserService testUserService = new TestUserService(userList.get(3).getId());
+		testUserService.setUserDao(userDao);
 
 		TransactionHandler txHandler = new TransactionHandler();
-		txHandler.setTarget(testUserServiceImpl);
+		txHandler.setTarget(testUserService);
 		txHandler.setTransactionManager(transactionManager);
 		txHandler.setPattern("upgradeLevels");
 
