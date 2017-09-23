@@ -36,6 +36,7 @@
 
     <bean id="testUserService" class="ch01.springbook.user.UserServiceTest$TestUserService" parent="userService" />
 
+    <tx:annotation-driven />
     <!--
         <bean id="transactionAdvice" class="ch01.springbook.user.TransactionAdvice">
             <property name="transactionManager" ref="transactionManager"/>
@@ -70,6 +71,7 @@
         <property name="text" value="Factory Bean" />
     </bean>
 
+    <!--
     <tx:advice id="transactionAdvice" transaction-manager="transactionManager">
         <tx:attributes>
             <tx:method name="get*" read-only="true"/>
@@ -81,5 +83,7 @@
         <aop:pointcut id="transactionPointcut" expression="bean(*Service)" />
         <aop:advisor advice-ref="transactionAdvice" pointcut-ref="transactionPointcut" />
     </aop:config>
+
+    -->
 
 </beans>
