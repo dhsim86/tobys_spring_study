@@ -16,6 +16,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.dao.TransientDataAccessResourceException;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -42,6 +43,14 @@ public class UserServiceTest {
 
 		public TestUserService() {
 
+		}
+
+		public List<User> getAll() {
+			for (User user : super.getAll()) {
+				super.update(user);
+			}
+
+			return null;
 		}
 
 		protected void upgradeLevel(User user) {
@@ -194,6 +203,11 @@ public class UserServiceTest {
 		}
 
 		checkLevelUpgraded(userList.get(1), false);
+	}
+
+	@Test(expected = TransientDataAccessResourceException.class)
+	public void readOnlyTransactionAttribute() {
+		testUserService.getAll();
 	}
 
 	@Test
