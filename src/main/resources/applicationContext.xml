@@ -33,30 +33,42 @@
 
     <bean id="testUserService" class="ch01.springbook.user.UserServiceTest$TestUserService" parent="userService" />
 
-    <bean id="transactionAdvice" class="ch01.springbook.user.TransactionAdvice">
-        <property name="transactionManager" ref="transactionManager"/>
-    </bean>
+    <!--
+        <bean id="transactionAdvice" class="ch01.springbook.user.TransactionAdvice">
+            <property name="transactionManager" ref="transactionManager"/>
+        </bean>
 
-<!--
-    <bean id="transactionPointcut" class="org.springframework.aop.aspectj.AspectJExpressionPointcut">
-        <property name="expression" value="execution(* *..*ServiceImpl.upgrade*(..))" />
-    </bean>
 
-    <bean id="transactionAdvisor" class="org.springframework.aop.support.DefaultPointcutAdvisor">
-        <property name="advice" ref="transactionAdvice"/>
-        <property name="pointcut" ref="transactionPointcut"/>
-    </bean>
+        <bean id="transactionPointcut" class="org.springframework.aop.aspectj.AspectJExpressionPointcut">
+            <property name="expression" value="execution(* *..*ServiceImpl.upgrade*(..))" />
+        </bean>
 
-    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" />
--->
+        <bean id="transactionAdvisor" class="org.springframework.aop.support.DefaultPointcutAdvisor">
+            <property name="advice" ref="transactionAdvice"/>
+            <property name="pointcut" ref="transactionPointcut"/>
+        </bean>
+
+        <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" />
+    -->
+
+    <bean id="message" class="ch06.springbook.factorybean.MessageFactoryBean">
+        <property name="text" value="Factory Bean" />
+    </bean>
 
     <aop:config>
         <aop:pointcut id="transactionPointcut" expression="execution(* *..*ServiceImpl.upgrade*(..))" />
         <aop:advisor advice-ref="transactionAdvice" pointcut-ref="transactionPointcut" />
     </aop:config>
 
-    <bean id="message" class="ch06.springbook.factorybean.MessageFactoryBean">
-        <property name="text" value="Factory Bean" />
+    <bean id="transactionAdvice" class="org.springframework.transaction.interceptor.TransactionInterceptor">
+        <property name="transactionManager" ref="transactionManager" />
+        <property name="transactionAttributes">
+            <props>
+                <prop key="get*">PROPAGATION_REQUIRED,readOnly,timeout_30</prop>
+                <prop key="upgrade*">PROPAGATION_REQUIRES_NEW,ISOLATION_SERIALIZABLE</prop>
+                <prop key="*">PROPAGATION_REQUIRED</prop>
+            </props>
+        </property>
     </bean>
 
 </beans>
