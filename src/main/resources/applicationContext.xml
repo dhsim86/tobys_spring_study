@@ -28,6 +28,7 @@
 
     <bean id="userDao" class="ch01.springbook.user.dao.UserDaoJdbc">
         <property name="dataSource" ref="dataSource" />
+        <property name="sqlService" ref="sqlService" />
     </bean>
 
     <bean id="userService" class="ch01.springbook.user.UserServiceImpl" >
@@ -35,6 +36,19 @@
     </bean>
 
     <bean id="testUserService" class="ch01.springbook.user.UserServiceTest$TestUserService" parent="userService" />
+
+    <bean id="sqlService" class="ch07.springbook.sql.SimpleSqlService">
+        <property name="sqlMap">
+            <map>
+                <entry key="userAdd" value="INSERT INTO users(id, name, password, level, login, recommend, email) VALUES(?, ?, ?, ?, ?, ?, ?)" />
+                <entry key="userGet" value="SELECT * FROM users WHERE id = ?" />
+                <entry key="userGetAll" value="SELECT * FROM users" />
+                <entry key="userDeleteAll" value="DELETE FROM users" />
+                <entry key="userGetCount" value="SELECT COUNT(*) FROM users" />
+                <entry key="userUpdate" value="UPDATE users SET name = ?, password = ?, level = ?, login = ?, recommend = ?, email = ? WHERE id = ?" />
+            </map>
+        </property>
+    </bean>
 
     <tx:annotation-driven />
     <!--
