@@ -13,7 +13,9 @@ import ch07.springbook.sql.registry.SqlRegistry;
 
 public class JaxbXmlSqlReader implements SqlReader {
 
-	private String sqlMapFile;
+	private static final String DEFAULT_SQLMAP_FILE = "/sql/sqlmap.xml";
+
+	private String sqlMapFile = DEFAULT_SQLMAP_FILE;
 
 	public void setSqlMapFile(String sqlMapFile) {
 		this.sqlMapFile = sqlMapFile;
