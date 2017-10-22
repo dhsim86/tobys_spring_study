@@ -1,11 +1,11 @@
 package ch05.springbook.reflection;
 
-import org.junit.Test;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 
 import java.lang.reflect.Method;
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import org.junit.Test;
 
 public class ReflectionTest {
 
