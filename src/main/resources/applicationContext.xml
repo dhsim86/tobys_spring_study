@@ -42,17 +42,11 @@
 
     <bean id="sqlService" class="ch07.springbook.sql.OxmSqlService" >
         <property name="unmarshaller" ref="unmarshaller" />
+        <property name="sqlMap" value="classpath:sql/sqlmap.xml" />
     </bean>
 
     <bean id="unmarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
         <property name="contextPath" value="ch07.springbook.sql.reader.jaxb" />
-    </bean>
-
-    <bean id="sqlReader" class="ch07.springbook.sql.reader.JaxbXmlSqlReader" >
-        <property name="sqlMapFile" value="/sql/sqlmap.xml" />
-    </bean>
-
-    <bean id="sqlRegistry" class="ch07.springbook.sql.registry.HashMapSqlRegistry" >
     </bean>
     <!--
     <bean id="sqlService" class="ch07.springbook.sql.SimpleSqlService">
