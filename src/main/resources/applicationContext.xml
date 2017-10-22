@@ -3,14 +3,16 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
                            http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
-
-
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context-4.3.xsd
                            http://www.springframework.org/schema/tx
                            http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
 
-    <tx:annotation-driven />
+    <tx:annotation-driven/>
+    <context:annotation-config/>
 
     <bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
         <property name="driverClass" value="com.mysql.jdbc.Driver" />
@@ -39,6 +41,7 @@
     <bean id="testUserService" class="ch01.springbook.user.UserServiceTest$TestUserService" parent="userService" />
 
     <bean id="sqlService" class="ch07.springbook.sql.XmlSqlService" >
+        <property name="sqlMapFile" value="/sql/sqlmap.xml" />
     </bean>
     <!--
     <bean id="sqlService" class="ch07.springbook.sql.SimpleSqlService">
