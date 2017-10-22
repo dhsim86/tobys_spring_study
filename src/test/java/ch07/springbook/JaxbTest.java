@@ -10,10 +10,10 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+import ch07.springbook.sql.reader.jaxb.SqlType;
+import ch07.springbook.sql.reader.jaxb.Sqlmap;
 import org.junit.Test;
 
-import ch07.springbook.sql.SqlType;
-import ch07.springbook.sql.Sqlmap;
 
 public class JaxbTest {
 

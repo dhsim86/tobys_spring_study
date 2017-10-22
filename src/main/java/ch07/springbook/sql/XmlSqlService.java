@@ -11,6 +11,8 @@ import javax.xml.bind.Unmarshaller;
 
 import ch01.springbook.user.dao.UserDao;
 import ch07.springbook.sql.reader.SqlReader;
+import ch07.springbook.sql.reader.jaxb.SqlType;
+import ch07.springbook.sql.reader.jaxb.Sqlmap;
 import ch07.springbook.sql.registry.SqlNotFoundException;
 import ch07.springbook.sql.registry.SqlRegistry;
 

@@ -6,7 +6,7 @@
 //
 
 
-package ch07.springbook.sql;
+package ch07.springbook.sql.reader.jaxb;
 
 import java.util.ArrayList;
 import java.util.List;
