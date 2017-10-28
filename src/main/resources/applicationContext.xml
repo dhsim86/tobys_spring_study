@@ -4,12 +4,15 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
                            http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
                            http://www.springframework.org/schema/context
                            http://www.springframework.org/schema/context/spring-context-4.3.xsd
                            http://www.springframework.org/schema/tx
-                           http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+                           http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
+                           http://www.springframework.org/schema/jdbc
+                           http://www.springframework.org/schema/jdbc/spring-jdbc-4.3.xsd">
 
     <tx:annotation-driven/>
     <context:annotation-config/>
@@ -50,8 +53,13 @@
         <property name="contextPath" value="ch07.springbook.sql.reader.jaxb" />
     </bean>
 
-    <bean id="sqlRegistry" class="ch07.springbook.sql.registry.ConcurrentHashMapSqlRegistry">
+    <bean id="sqlRegistry" class="ch07.springbook.sql.registry.EmbeddedDbSqlRegistry">
+        <property name="dataSource" ref="embeddedDatabase" />
     </bean>
+
+    <jdbc:embedded-database id="embeddedDatabase" type="HSQL" >
+        <jdbc:script location="classpath:sql/embedded/schema.sql" />
+    </jdbc:embedded-database>
 
     <!--
     <bean id="sqlService" class="ch07.springbook.sql.SimpleSqlService">
