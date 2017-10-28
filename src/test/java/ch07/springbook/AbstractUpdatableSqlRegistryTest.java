@@ -16,18 +16,12 @@ import ch07.springbook.sql.registry.UpdatableSqlRegistry;
 
 public abstract class AbstractUpdatableSqlRegistryTest {
 
-	private UpdatableSqlRegistry sqlRegistry;
-
-	@Before
-	public void setUp() {
-		sqlRegistry = createUpdatableSqlRegistry();
-	}
-
+	protected UpdatableSqlRegistry sqlRegistry;
 	abstract protected UpdatableSqlRegistry createUpdatableSqlRegistry();
 
 	@Before
 	public void init() {
-		sqlRegistry = new ConcurrentHashMapSqlRegistry();
+		sqlRegistry = createUpdatableSqlRegistry();
 		sqlRegistry.registerSql("KEY1", "SQL1");
 		sqlRegistry.registerSql("KEY2", "SQL2");
 		sqlRegistry.registerSql("KEY3", "SQL3");
