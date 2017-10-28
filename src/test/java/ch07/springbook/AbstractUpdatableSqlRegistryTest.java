@@ -1,0 +1,72 @@
+package ch07.springbook;
+
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import ch07.springbook.sql.registry.ConcurrentHashMapSqlRegistry;
+import ch07.springbook.sql.registry.SqlNotFoundException;
+import ch07.springbook.sql.registry.SqlUpdateFailureException;
+import ch07.springbook.sql.registry.UpdatableSqlRegistry;
+
+public abstract class AbstractUpdatableSqlRegistryTest {
+
+	private UpdatableSqlRegistry sqlRegistry;
+
+	@Before
+	public void setUp() {
+		sqlRegistry = createUpdatableSqlRegistry();
+	}
+
+	abstract protected UpdatableSqlRegistry createUpdatableSqlRegistry();
+
+	@Before
+	public void init() {
+		sqlRegistry = new ConcurrentHashMapSqlRegistry();
+		sqlRegistry.registerSql("KEY1", "SQL1");
+		sqlRegistry.registerSql("KEY2", "SQL2");
+		sqlRegistry.registerSql("KEY3", "SQL3");
+	}
+
+	@Test
+	public void find() {
+		checkFindResult("SQL1", "SQL2", "SQL3");
+	}
+
+	@Test(expected = SqlNotFoundException.class)
+	public void unknownKey(){
+		sqlRegistry.findSql("SQL9999!@#");
+	}
+
+	@Test
+	public void updateSingle() {
+		sqlRegistry.updateSql("KEY2", "Modified2");
+		checkFindResult("SQL1", "Modified2", "SQL3");
+	}
+
+	@Test
+	public void updateMulti() {
+		Map<String, String> sqlMap = new HashMap<>();
+		sqlMap.put("KEY1", "Modified1");
+		sqlMap.put("KEY3", "Modified3");
+
+		sqlRegistry.updateSql(sqlMap);
+		checkFindResult("Modified1", "SQL2", "Modified3");
+	}
+
+	@Test(expected = SqlUpdateFailureException.class)
+	public void updateWithNotExistingKey() {
+		sqlRegistry.updateSql("SQL9999!@#", "Modified");
+	}
+
+	protected void checkFindResult(String expected1, String expected2, String expected3) {
+		assertThat(sqlRegistry.findSql("KEY1"), is(expected1));
+		assertThat(sqlRegistry.findSql("KEY2"), is(expected2));
+		assertThat(sqlRegistry.findSql("KEY3"), is(expected3));
+	}
+}
