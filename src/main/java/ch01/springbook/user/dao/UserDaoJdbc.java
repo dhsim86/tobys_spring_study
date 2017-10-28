@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -15,6 +16,7 @@ import ch07.springbook.sql.SqlService;
 
 public class UserDaoJdbc implements UserDao {
 
+	@Autowired
 	private SqlService sqlService;
 
 	private JdbcTemplate jdbcTemplate;
@@ -39,6 +41,7 @@ public class UserDaoJdbc implements UserDao {
 
 	}
 
+	@Autowired
 	public void setDataSource(DataSource dataSource) {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
 	}
