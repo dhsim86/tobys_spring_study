@@ -2,18 +2,20 @@ package ch01.springbook.user;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import ch01.springbook.user.dao.UserDao;
 import ch01.springbook.user.domain.Level;
 import ch01.springbook.user.domain.User;
 
-/**
- * Created by nhnent on 2017. 9. 7..
- */
+@Service("userService")
 public class UserServiceImpl implements UserService {
 
 	public static final int MIN_LOGCOUNT_FOR_SILVER = 50;
 	public static final int MIN_RECOMMEND_FOR_GOLD = 30;
 
+	@Autowired
 	private UserDao userDao;
 
 	public void setUserDao(UserDao userDao) {

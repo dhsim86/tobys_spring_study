@@ -2,7 +2,9 @@ package test;
 
 import javax.sql.DataSource;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
@@ -16,10 +18,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import com.mysql.jdbc.Driver;
 
 import ch01.springbook.user.UserService;
-import ch01.springbook.user.UserServiceImpl;
 import ch01.springbook.user.UserServiceTest;
 import ch01.springbook.user.dao.UserDao;
-import ch01.springbook.user.dao.UserDaoJdbc;
 import ch06.springbook.factorybean.Message;
 import ch06.springbook.factorybean.MessageFactoryBean;
 import ch07.springbook.sql.OxmSqlService;
@@ -29,7 +29,11 @@ import ch07.springbook.sql.registry.SqlRegistry;
 
 @Configuration
 @EnableTransactionManagement
+@ComponentScan(basePackages = "ch01")
 public class TestApplicationContext {
+
+	@Autowired
+	private UserDao userDao;
 
 	@Bean
 	public DataSource dataSource() {
@@ -50,21 +54,9 @@ public class TestApplicationContext {
 	}
 
 	@Bean
-	public UserDao userDao() {
-		return new UserDaoJdbc();
-	}
-
-	@Bean
-	public UserService userService() {
-		UserServiceImpl userService = new UserServiceImpl();
-		userService.setUserDao(userDao());
-		return userService;
-	}
-
-	@Bean
 	public UserService testUserService() {
 		UserServiceTest.TestUserService testUserService = new UserServiceTest.TestUserService();
-		testUserService.setUserDao(userDao());
+		testUserService.setUserDao(userDao);
 		return testUserService;
 	}
 

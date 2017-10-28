@@ -9,11 +9,13 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 
 import ch01.springbook.user.domain.Level;
 import ch01.springbook.user.domain.User;
 import ch07.springbook.sql.SqlService;
 
+@Repository
 public class UserDaoJdbc implements UserDao {
 
 	@Autowired
