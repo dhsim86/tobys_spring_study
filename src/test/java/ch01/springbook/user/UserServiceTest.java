@@ -25,9 +25,10 @@ import org.springframework.transaction.PlatformTransactionManager;
 import ch01.springbook.user.dao.UserDao;
 import ch01.springbook.user.domain.Level;
 import ch01.springbook.user.domain.User;
+import test.TestApplicationContext;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "/applicationContext.xml")
+@ContextConfiguration(classes = TestApplicationContext.class)
 public class UserServiceTest {
 
 	static class TestUserServiceException extends RuntimeException {
