@@ -22,7 +22,7 @@ public class EmbeddedDbTest {
 	@Before
 	public void setUp() {
 		db = new EmbeddedDatabaseBuilder()
-				.setType(EmbeddedDatabaseType.HSQL)
+				.setType(EmbeddedDatabaseType.H2)
 				.addScript("classpath:sql/embedded/schema.sql")
 				.addScript("classpath:sql/embedded/data.sql")
 				.build();

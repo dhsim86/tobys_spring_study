@@ -9,7 +9,6 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 
-import ch07.springbook.sql.registry.ConcurrentHashMapSqlRegistry;
 import ch07.springbook.sql.registry.SqlNotFoundException;
 import ch07.springbook.sql.registry.SqlUpdateFailureException;
 import ch07.springbook.sql.registry.UpdatableSqlRegistry;
