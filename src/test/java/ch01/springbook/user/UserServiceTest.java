@@ -11,6 +11,7 @@ import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.List;
 
+import com.AppContext;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,10 +26,10 @@ import org.springframework.transaction.PlatformTransactionManager;
 import ch01.springbook.user.dao.UserDao;
 import ch01.springbook.user.domain.Level;
 import ch01.springbook.user.domain.User;
-import test.TestApplicationContext;
+import test.TestAppContext;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = TestApplicationContext.class)
+@ContextConfiguration(classes = {AppContext.class, TestAppContext.class})
 public class UserServiceTest {
 
 	static class TestUserServiceException extends RuntimeException {

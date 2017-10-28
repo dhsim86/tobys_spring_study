@@ -1,4 +1,4 @@
-package test;
+package com;
 
 import javax.sql.DataSource;
 
@@ -17,11 +17,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.mysql.jdbc.Driver;
 
-import ch01.springbook.user.UserService;
-import ch01.springbook.user.UserServiceTest;
 import ch01.springbook.user.dao.UserDao;
-import ch06.springbook.factorybean.Message;
-import ch06.springbook.factorybean.MessageFactoryBean;
 import ch07.springbook.sql.OxmSqlService;
 import ch07.springbook.sql.SqlService;
 import ch07.springbook.sql.registry.EmbeddedDbSqlRegistry;
@@ -30,7 +26,7 @@ import ch07.springbook.sql.registry.SqlRegistry;
 @Configuration
 @EnableTransactionManagement
 @ComponentScan(basePackages = "ch01")
-public class TestApplicationContext {
+public class AppContext {
 
 	@Autowired
 	private UserDao userDao;
@@ -51,13 +47,6 @@ public class TestApplicationContext {
 		DataSourceTransactionManager transactionManager = new DataSourceTransactionManager();
 		transactionManager.setDataSource(dataSource());
 		return transactionManager;
-	}
-
-	@Bean
-	public UserService testUserService() {
-		UserServiceTest.TestUserService testUserService = new UserServiceTest.TestUserService();
-		testUserService.setUserDao(userDao);
-		return testUserService;
 	}
 
 	@Bean
@@ -87,13 +76,5 @@ public class TestApplicationContext {
 		return new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.HSQL)
 											.addScript("classpath:sql/embedded/schema.sql")
 											.build();
-	}
-
-	@Bean
-	public Message message() throws Exception {
-		MessageFactoryBean messageFactoryBean = new MessageFactoryBean();
-		messageFactoryBean.setText("Factory Bean");
-
-		return messageFactoryBean.getObject();
 	}
 }
