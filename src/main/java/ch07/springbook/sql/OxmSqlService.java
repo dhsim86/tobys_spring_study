@@ -68,6 +68,10 @@ public class OxmSqlService implements SqlService {
 		oxmSqlReader.setSqlMap(sqlMap);
 	}
 
+	public void setSqlRegistry(SqlRegistry sqlRegistry) {
+		this.sqlRegistry = sqlRegistry;
+	}
+
 	@Override
 	public String getSql(String key) throws SqlRetrievalFailureException {
 		return baseSqlService.getSql(key);

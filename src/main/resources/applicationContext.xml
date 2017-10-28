@@ -43,11 +43,16 @@
     <bean id="sqlService" class="ch07.springbook.sql.OxmSqlService" >
         <property name="unmarshaller" ref="unmarshaller" />
         <property name="sqlMap" value="classpath:sql/sqlmap.xml" />
+        <property name="sqlRegistry" ref="sqlRegistry" />
     </bean>
 
     <bean id="unmarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
         <property name="contextPath" value="ch07.springbook.sql.reader.jaxb" />
     </bean>
+
+    <bean id="sqlRegistry" class="ch07.springbook.sql.registry.ConcurrentHashMapSqlRegistry">
+    </bean>
+
     <!--
     <bean id="sqlService" class="ch07.springbook.sql.SimpleSqlService">
         <property name="sqlMap">

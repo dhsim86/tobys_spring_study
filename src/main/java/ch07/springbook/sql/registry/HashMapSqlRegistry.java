@@ -3,8 +3,6 @@ package ch07.springbook.sql.registry;
 import java.util.HashMap;
 import java.util.Map;
 
-import ch07.springbook.sql.SqlRetrievalFailureException;
-
 public class HashMapSqlRegistry implements SqlRegistry {
 
 	private Map<String, String> sqlMap = new HashMap<>();
@@ -19,7 +17,7 @@ public class HashMapSqlRegistry implements SqlRegistry {
 		String sql = sqlMap.get(key);
 
 		if (sql == null) {
-			throw new SqlRetrievalFailureException("Can not find appropriate sql statement, key: " + key);
+			throw new SqlNotFoundException("Can not find appropriate sql statement, key: " + key);
 		}
 
 		return sql;
