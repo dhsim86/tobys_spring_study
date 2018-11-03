@@ -2,6 +2,7 @@ package ch10.springbook._00;
 
 import org.junit.Test;
 import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.config.RuntimeBeanReference;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.context.support.StaticApplicationContext;
 
@@ -29,6 +30,24 @@ public class ApplicationContextTest {
         assertThat(hello2.sayHello(), is("Hello Spring"));
         assertThat(hello1, is(not(hello2)));
         assertThat(sc.getBeanFactory().getBeanDefinitionCount(), is(2));
+    }
+
+    @Test
+    public void registerBeanWithDependency() {
+        StaticApplicationContext sc = new StaticApplicationContext();
+
+        sc.registerBeanDefinition("printer", new RootBeanDefinition(StringPrinter.class));
+
+        BeanDefinition helloDef = new RootBeanDefinition(Hello.class);
+        helloDef.getPropertyValues().addPropertyValue("name", "Spring");
+        helloDef.getPropertyValues().addPropertyValue("printer", new RuntimeBeanReference("printer"));
+
+        sc.registerBeanDefinition("hello", helloDef);
+
+        Hello hello = sc.getBean("hello", Hello.class);
+        hello.print();
+
+        assertThat(sc.getBean("printer").toString(), is("Hello Spring"));
     }
 
 }
