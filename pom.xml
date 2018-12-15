@@ -10,6 +10,10 @@
     <description>Toby'sSpring Study</description>
     <version>1.0-SNAPSHOT</version>
 
+    <modules>
+        <module>mvc</module>
+    </modules>
+
     <properties>
         <maven.war.plugin-version>2.4</maven.war.plugin-version>
         <webAppDir>target/classes</webAppDir>
